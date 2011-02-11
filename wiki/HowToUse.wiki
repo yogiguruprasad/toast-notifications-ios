@@ -1,13 +1,112 @@
-#summary One-sentence summary of this page.
+#summary How to use iToast.
+#labels itoast,toastnotifications
 
-= Introduction =
+= Simple Usage =
 
-Add your content here.
+There is only one way to create an iToast: so you won't need to retain much. In it basic form, you create an iToast this way:
+
+{{{
+[[iToast makeText:NSLocalizedString(@"The activity has been successfully saved.", @"")] show];
+}}}
 
 
-= Details =
+= Chaining calls =
+Like in jQuery, you can chain call and terminate by using the *show* method, there are many things you can configure. Look bellow.
 
-Add your content here.  Format your content with:
-  * Text in *bold* or _italic_
-  * Headings, paragraphs, and lists
-  * Automatic links to other wiki pages
+{{{
+
+[[[iToast makeText:NSLocalizedString(@"The activity has been successfully saved.", @"")] 
+					setGravity:iToastGravityBottom] show];
+
+}}}
+
+*Note :* Above the gravity can be any of `iToastGravityBottom`, `iToastGravityTop`, `iToastGravityCenter`.
+
+  * You can also provide the a physical position on the screen: see the class interface.
+  * You can provide two offset value that will be added to the actual position of the iToast: you can use this to either move it a few pixel to the left (negative *offsetLeft*), right (positive *offsetLeft*), top or bottom.
+
+Or
+
+{{{
+[[[[iToast makeText:NSLocalizedString(@"Something to display a very long time", @"")] 
+					setGravity:iToastGravityBottom] setDuration:iToastDurationLong] show];
+}}}
+
+*Note :* Above the duration can be any integer (the number of millisecond to display it). There is Three preset you can use for duration:
+
+  * *iToastDurationLong *
+  * *iToastDurationShort *
+  * *iToastDurationNormal *
+
+== The Interface ==
+
+{{{
+@interface iToast : NSObject {
+	iToastSettings *_settings;
+	NSInteger offsetLeft;
+	NSInteger offsetTop;
+	
+	NSTimer *timer;
+	
+	UIView *view;
+	NSString *text;
+}
+
+- (void) show;
+
+- (iToast *) setDuration:(NSInteger ) duration;
+- (iToast *) setGravity:(iToastGravity) gravity 
+			 offsetLeft:(NSInteger) left
+			 offsetTop:(NSInteger) top;
+- (iToast *) setGravity:(iToastGravity) gravity;
+- (iToast *) setPostion:(CGPoint) position;
+
++ (iToast *) makeText:(NSString *) text;
+
+-(iToastSettings *) theSettings;
+
+@end
+
+}}}
+
+= The Shared Settings =
+
+You don't need to set all the settings each time you want to show an iToast. There is a shared settings repo that each iToast copy it setting when first created. 
+
+To modify the shared setting, you first obtain the shared settings like:
+{{{
+iToastSettings *theSettings = [iToastSettings getSharedSettings];
+}}
+
+Then you change the settings:
+
+{{{
+theSettings.duration = 4000;
+}}}
+
+===The interface of the SharedSettings ===
+
+{{{
+@interface iToastSettings : NSObject<NSCopying>{
+	NSInteger duration;
+	iToastGravity gravity;
+	CGPoint postition;
+	iToastType toastType;
+	
+	NSDictionary *images;
+	
+	BOOL positionIsSet;
+}
+
+
+@property(assign) NSInteger duration;
+@property(assign) iToastGravity gravity;
+@property(assign) CGPoint postition;
+@property(readonly) NSDictionary *images;
+
+
+- (void) setImage:(UIImage *)img forType:(iToastType) type;
++ (iToastSettings *) getSharedSettings;
+						  
+@end
+}}}
