@@ -1,5 +1,7 @@
-#summary This page tells you what toast notifications are and why you may need them in your iPhone/iPad application.
 #labels iToast,Toast,iPhone,notifications,UIAlertviewreplacement,usability
+<font color="#FF000" size="4"> THIS project has been mooved to github: https://github.com/ecstasy2/toast-notifications-ios*</font>
+
+#summary This page tells you what toast notifications are and why you may need them in your iPhone/iPad application.
 
 = What is iToast =
 
